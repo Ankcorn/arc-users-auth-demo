@@ -1,12 +1,14 @@
 @app
-users
+users-demo
 
 @users
 mac
 web
 
+@cdn
+@static
 @http
-get /app mac
+get /api/private mac
 
 @macros
 users

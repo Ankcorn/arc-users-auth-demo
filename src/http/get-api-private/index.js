@@ -1,6 +1,5 @@
 // learn more about HTTP functions here: https://arc.codes/primitives/http
 exports.handler = async function http (req) {
-  console.log(req)
   return {
     statusCode: 200,
     headers: {
