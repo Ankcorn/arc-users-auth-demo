@@ -3,7 +3,6 @@ users-demo
 
 @users
 mac
-web
 
 @cdn
 @static
