@@ -1,0 +1,11 @@
+{
+  "extends": "@snowpack/app-scripts-react",
+  "scripts": { "build:css": "postcss" },
+  "plugins": [["@snowpack/plugin-webpack"]],
+  "devOptions": {
+    "out": "../public"
+  },
+  "installOptions": {
+    "pollyfillNode": true
+  }
+}
