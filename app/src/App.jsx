@@ -1,34 +1,5 @@
 import React, { useState } from 'react';
-import { CognitoUserPool } from 'amazon-cognito-identity-js';
-
-
-
-async function signUp(username, password) {
-  return new Promise((resolve, reject) => {
-    var userPool = new CognitoUserPool({ UserPoolId: 'eu-west-1_Mo7jjzwz0', ClientId: '2qfk2m3ubcrjq4ghrqb519op44'});
-    userPool.signUp(username, password, null, null, (err, data) => {
-      if(err) reject(err);
-      resolve(data);
-    })
-  })
-}
-
-// async function signIn() {
-//   try {
-//       const response = await Auth.signIn({
-//           username: 'thomasankcorn@gmail.com',
-//           password: 'Thomas1!'
-//       });
-//       console.log(response);
-//   } catch (error) {
-//       console.log('error signing up:', error);
-//   }
-// }
-
-// async function getToken() {
-//   const response = await Auth.currentSession();
-//   console.log(response);
-// }
+import * as users from './lib'
 
 function App() {
   const [router, setRoute] = useState('options');
@@ -44,31 +15,67 @@ function App() {
        {router === 'signup' && <SignUp setRoute={setRoute}/>}
        {router === 'signin' && <SignIn setRoute={setRoute}/>}
        {router === 'secret' && <ExtraSpecialMembersArea setRoute={setRoute}/>}
+       {router === 'email-confirmation' && <ConfirmSignUp />}
       </div>
+      <button onClick={users.getToken}>token</button>
     </div>
   );
 }
 
-function SignIn({setRoute}) {
+function SignIn({ setRoute }) {
+  const [form, updateForm] = useState({ username: '', password: '' })
+  console.log(form)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await users.signIn(form.username, form.password);
+      console.log(result)
+      // setRoute('email-confirmation')
+    } catch(e) {
+      console.log(e)
+    }
+  }
   return (
-    <div className="max-w-xl bg-white shadow-xl rounded-lg p-8 flex flex-col mt-10 md:mt-0">
+    <form onSubmit={handleSubmit} className="max-w-xl bg-white shadow-xl rounded-lg p-8 flex flex-col mt-10 md:mt-0">
       <h2 className="text-gray-900 text-lg font-medium title-font mb-5">Sign In</h2>
-      <input className="bg-white shadow-inner rounded border border-gray-400 focus:outline-none focus:border-indigo-500 text-base px-4 py-2 mb-4" placeholder="Email" type="email" />
-      <input className="bg-white rounded border border-gray-400 focus:outline-none focus:border-indigo-500 text-base px-4 py-2 mb-4" placeholder="Password" type="password" />
-      <button className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-purple-600 transition duration-1000 rounded text-lg">Sign In</button>
+      <input onChange={({ target }) => updateForm(s=> ({ ...s, username: target.value }))} value={form.username} className="bg-white shadow-inner rounded border border-gray-400 focus:outline-none focus:border-indigo-500 text-base px-4 py-2 mb-4" placeholder="Email" type="text" />
+      <input onChange={({ target }) => updateForm(s=> ({ ...s, password: target.value }))} value={form.password} className="bg-white rounded border border-gray-400 focus:outline-none focus:border-indigo-500 text-base px-4 py-2 mb-4" placeholder="Password" type="password" />
+      <button type="submit" className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-purple-600 transition duration-1000 rounded text-lg">Sign In</button>
       <p className="text-xs text-gray-700 mt-3">Need an account? <a className="underline" onClick={() => setRoute('signup')}>Sign Up</a></p>
-    </div>
+    </form>
     )
 }
 
+function ConfirmSignUp() {
+  const [code, setCode] = useState();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await users.confirmSignUp(code);
+      console.log(result)
+      // setRoute('email-confirmation')
+    } catch(e) {
+      console.log(e)
+    }
+  }
+  return (
+    <form onSubmit={handleSubmit} className="max-w-xl bg-white shadow-xl rounded-lg p-8 flex flex-col mt-10 md:mt-0">
+      <h2 className="text-gray-900 text-lg font-medium title-font mb-5">Confirm Sign Up</h2>
+      <input value={code} onChange={(e) => setCode(e.target.value)} className="bg-white rounded border border-gray-400 focus:outline-none focus:border-indigo-500 text-base px-4 py-2 mb-4" placeholder="email confirmation" type="text" />
+      <button type="submit" className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-purple-600 transition duration-1000 rounded text-lg">Sign In</button>
+    </form>
+    )
+}
 function SignUp({ setRoute }) {
   const [form, updateForm] = useState({ username: '', password: '' })
   
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const result = await signUp(form.username, form.password);
+      const result = await users.signUp(form.username, form.password);
       console.log(result)
+      setRoute('email-confirmation')
     } catch(e) {
       console.log(e)
     }
