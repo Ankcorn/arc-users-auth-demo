@@ -1,4 +1,11 @@
 {
   "extends": "@snowpack/app-scripts-react",
-  "scripts": { "build:css": "postcss" }
+  "scripts": { "build:css": "postcss" },
+  "proxy": {
+    "/api": "http://localhost:3333/api"
+  },
+  "devOptions": {
+    "bundle": true,
+    "out": "../public"
+  }
 }

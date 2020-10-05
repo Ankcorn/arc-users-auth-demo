@@ -1,6 +1,6 @@
 import { CognitoUserPool, CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 
-export const userPool =  new CognitoUserPool({ UserPoolId: 'eu-west-1_Mo7jjzwz0', ClientId: '2qfk2m3ubcrjq4ghrqb519op44'});
+export const userPool =  new CognitoUserPool({ UserPoolId: 'eu-west-1_bAu5adKWX', ClientId: '1sh4cu3tdnoqlbee4k0je0rgec'});
 
 export function signUp(username, password) {
   return new Promise((resolve, reject) => {
@@ -57,7 +57,7 @@ export function getToken() {
       if (err) {
           reject(err);
       }
-      resolve(session);
+      resolve(session.idToken.jwtToken);
     });
   });
 }

@@ -2,12 +2,11 @@
 users-demo
 
 @users
-mac
+demodashboard
 
-@cdn
 @static
 @http
-get /api/private mac
+get /api/private demodashboard
 
 @macros
 users
